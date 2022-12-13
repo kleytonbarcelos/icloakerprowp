@@ -10,20 +10,17 @@
     * Author URI: https://icloakerpro.com/
     * Text Domain: icloakerpro
     **/
-
+    
+    if ( ! defined( 'ABSPATH' ) ) { exit; }
+    
     // add_action('wp_body_open', 'tb_head');
     // function tb_head()
     // {
     //     global $post;
     //     echo $post->ID;
     //     echo '<br>';
-    //     get_option('blackpage');        
+    //     get_option('blackpage');
     // }
-
-    if ( ! defined( 'ABSPATH' ) ) { exit; }
-    
-
-
     add_action('pre_get_posts', 'changeMainPage');
     function changeMainPage( $query ) {
         if( ! is_admin() && $query->is_main_query() ) {
@@ -36,7 +33,7 @@
                 global $post;
                 
                 $url = '';
-                eval(get_option('code'));
+                eval(get_option('code')); // API key from https://icloakerpro.com
                             
                 $curl = curl_init();
                 curl_setopt($curl, CURLOPT_URL, $url);
@@ -46,23 +43,12 @@
                 curl_close ($curl);
                                             
                 if( $response['goToOffer'] === 1 ) {
-                    //$query->set('page_id', $post->ID);
-                    //$query->set('page_id', get_option('blackpage'));
-                    //$_GET['page_id'] = get_option('blackpage');
-                    // add_filter( 'the_content',
-                    // function () {
-                    //     $post_content = get_post(get_option('blackpage'));
-                    //     $content = $post_content->post_content;
-                    //     return $content;
-                    // });
+
                 }else{
                     if( !empty($response['error']) ) {
                         echo $response['error'];
                     }else{
                         $query->set('page_id', get_option('whitepage'));
-                        //$_GET['page_id'] = get_option('whitepage');
-                        // $post_content = get_post(get_option('whitepage'));
-                        // echo apply_filters('the_content', $post_content->post_content);
                     }
                 }
             }
@@ -107,7 +93,7 @@
                     }
                     ?>
                 </select>
-                <br><br>
+                <!-- <br><br>
                 <label for="blackpageSelect">Página(s) Black:</label>
                 <input type="hidden" name="blackpage" id="blackpage" value="<?=get_option('blackpage')?>" />
                 <select name="blackpageSelect" id="blackpageSelect" multiple='multiple' size="5">
@@ -120,25 +106,25 @@
                     }
                     ?>
                 </select>
-                <br><br>
+                <br><br> -->
                 <label for="code">Código da campanha (iCloaker Pro):</label>
                 <textarea name="code" id="code"><?=get_option('code')?></textarea>
                 <?php submit_button('SALVAR'); ?>
             </form>
             <script>
-                jQuery(function($) {
-                    $("select[name='blackpageSelect']").change(function() {
-                        var $value = $(this).val();
-                        var $input = $("#blackpage");
-                        console.log(this, $value)
-                        $input.val($value);
-                    });
-                });
-                setTimeout(()=>{
-                    $('#blackpage').val().split(',').map(function(item, count){
-                        $('#blackpageSelect option[value="'+item+'"]').attr('selected', true)
-                    })
-                }, 500)
+                // jQuery(function($) {
+                //     $("select[name='blackpageSelect']").change(function() {
+                //         var $value = $(this).val();
+                //         var $input = $("#blackpage");
+                //         console.log(this, $value)
+                //         $input.val($value);
+                //     });
+                // });
+                // setTimeout(()=>{
+                //     $('#blackpage').val().split(',').map(function(item, count){
+                //         $('#blackpageSelect option[value="'+item+'"]').attr('selected', true)
+                //     })
+                // }, 500)
             </script>
         </div>
         <?php
